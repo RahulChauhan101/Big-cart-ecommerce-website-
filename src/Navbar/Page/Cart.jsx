@@ -1,39 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFromCart, updateQuantity, clearCart } from "../../reducer/cartReducer";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
-  }, []);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const handleRemove = (id, selectedSize, selectedColorIndex) => {
-    const updatedCart = cartItems.filter(
-      (item) =>
-        !(
-          item.id === id &&
-          item.selectedSize === selectedSize &&
-          item.selectedColorIndex === selectedColorIndex
-        )
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    dispatch(removeFromCart({ id, selectedSize, selectedColorIndex }));
   };
 
   const handleUpdateQuantity = (id, selectedSize, selectedColorIndex, qty) => {
-    const updatedCart = cartItems.map((item) =>
-      item.id === id &&
-      item.selectedSize === selectedSize &&
-      item.selectedColorIndex === selectedColorIndex
-        ? { ...item, quantity: qty }
-        : item
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    dispatch(updateQuantity({ id, selectedSize, selectedColorIndex, quantity: qty }));
   };
 
   const totalItems = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -53,9 +34,19 @@ const Cart = () => {
 
   return (
     <>
-      <Navbar onSearch={(term) => {}} />
-      <div className="p-4 min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white">
-        <h2 className="text-2xl font-bold mb-4">Cart</h2>
+      <Navbar onSearch={() => {}} />
+      <div className="p-4 min-h-screen bg-gray-100 dark:bg-gray-400 dark:text-white">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold mb-4 dark:text-black">Cart</h2>
+          {cartItems.length > 0 && (
+            <button
+              onClick={() => dispatch(clearCart())}
+              className="h-9 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            >
+              Clear Cart
+            </button>
+          )}
+        </div>
 
         {cartItems.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">Your cart is empty.</p>
@@ -69,7 +60,7 @@ const Cart = () => {
                 <img
                   src={item.selectedImage || item.images[0]}
                   alt={item.name}
-                  className="w-24 h-24 object-cover rounded"
+                  className=" ml-5 w-40 h-40 object-cover rounded"
                 />
                 <div className="flex-1">
                   <h3 className="font-semibold">{item.brand}</h3>
@@ -81,12 +72,13 @@ const Cart = () => {
                   )}
 
                   <p>
-                    <strong>Rating:</strong> {item.ratings.average} ⭐ (
-                    {item.ratings.count} reviews)
+                    <strong>Rating:</strong> {item.ratings.average} ⭐ ({item.ratings.count} reviews)
                   </p>
+                  <p> MRP:{item.price} </p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    {item.currency} {item.discountPrice}
+                   DiscountPrice {item.currency} {item.discountPrice}
                   </p>
+                  <p> BigCart: {item.BigCart}</p>
 
                   <div className="flex items-center gap-2 mt-2">
                     <button
@@ -119,13 +111,11 @@ const Cart = () => {
                   </div>
 
                   <p className="mt-2 font-semibold">
-                    Subtotal: {item.currency} {(item.discountPrice || 0) * (item.quantity || 1)}
+                    Sub Total: {item.currency} {(item.discountPrice || 0) * (item.quantity || 1)}
                   </p>
 
                   <button
-                    onClick={() =>
-                      handleRemove(item.id, item.selectedSize, item.selectedColorIndex)
-                    }
+                    onClick={() => handleRemove(item.id, item.selectedSize, item.selectedColorIndex)}
                     className="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                   >
                     Remove
@@ -141,7 +131,7 @@ const Cart = () => {
 
               <button
                 onClick={handleCheckout}
-                className="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="mt-4 w-100 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
               >
                 Proceed to Checkout
               </button>

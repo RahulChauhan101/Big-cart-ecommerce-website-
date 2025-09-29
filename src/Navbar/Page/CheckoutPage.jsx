@@ -1,25 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Navbar from "../Navbar";
 import { FaMoneyBillWave, FaGooglePay, FaCreditCard, FaUniversity } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const CheckoutPage = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const cartItems = useSelector((state) => state.cart.items);
   const [selectedPayment, setSelectedPayment] = useState("cod"); 
   const [orderPlaced, setOrderPlaced] = useState(false); // track order
-
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      setCartItems(updatedCart);
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
 
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + (item.discountPrice || 0) * (item.quantity || 1),
@@ -48,12 +35,21 @@ const CheckoutPage = () => {
   return (
     <>
       <Navbar />
-      <div className="p-6 max-w-3xl mx-auto mt-6 bg-white dark:bg-gray-800 text-black dark:text-white min-h-screen rounded-lg shadow-lg">
+      <div className="p-6 max-w-3xl mx-auto mt-6 bg-slate-400 dark:bg-gray-800 text-black dark:text-white min-h-screen rounded-lg shadow-lg">
+        <div className=" flex items-center justify-center pb-6">
+                <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZj6WNrw6o1eh0Z84fAxIO0M-RMMoN1W3aeQ&s"
+            alt="Big Cart"
+            className="h-10 w-15 object-contain rounded-md"
+          />
+        </div>
         <h2 className="text-2xl font-bold mb-4 text-center">Checkout</h2>
+
+        
 
         {cartItems.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-300 text-center mt-6">
-            No items in cart 🚀
+            No items in cart 
           </p>
         ) : (
           <div className="space-y-4">
@@ -73,8 +69,9 @@ const CheckoutPage = () => {
                   <p>Qty: {item.quantity || 1}</p>
                 </div>
                 <p>
-                  {item.currency} {(item.discountPrice || 0) * (item.quantity || 1)}
+                   MRP : {item.currency} {(item.discountPrice || 0) * (item.quantity || 1)}
                 </p>
+                <p>DiscountPrice : {item.discountPrice} </p>
               </div>
             ))}
 

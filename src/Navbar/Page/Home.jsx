@@ -1,26 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { AiOutlineShopping } from "react-icons/ai";
+import { FaMale, FaFemale, FaChild } from "react-icons/fa";
+
 import { Link } from "react-router-dom";
 import Navbar from "../Navbar";
 import { data } from "../../data/data";
-
+import { addToCart } from "../../reducer/cartReducer";
+import { useDispatch } from "react-redux";
 const Home = () => {
   const { categories, products } = data;
+  const dispatch = useDispatch();
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedColors, setSelectedColors] = useState({});
   const [selectedSizes, setSelectedSizes] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [cart, setCart] = useState([]);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(storedCart);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("storage"));
-  }, [cart]);
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case "Men":
+        return <FaMale className=" h-5  text-blue-500" />;
+      case "Women":
+        return <FaFemale className=" h-5 text-pink-500" />;
+      case "Kids":
+        return <FaChild className=" h-5 text-purple-500" />;
+      default:
+        return <AiOutlineShopping className="text-green-600" />;
+    }
+  };
 
   const handleCategoryClick = (name) => setSelectedCategory(name);
   const handleColorClick = (productId, index) =>
@@ -31,44 +39,29 @@ const Home = () => {
   const handleAddToCart = (product) => {
     const selectedColorIndex = selectedColors[product.id] || 0;
     const selectedSize = selectedSizes[product.id] || null;
+    const selectedImage =
+      product.images && product.images[selectedColorIndex]
+        ? product.images[selectedColorIndex]
+        : product.images[0];
 
-    const cartItem = {
-      ...product,
-      quantity: 1,
-      selectedColorIndex,
-      selectedSize,
-      selectedImage:
-        product.images && product.images[selectedColorIndex]
-          ? product.images[selectedColorIndex]
-          : product.images[0],
-    };
-
-    const existing = cart.find(
-      (item) =>
-        item.id === product.id &&
-        item.selectedSize === selectedSize &&
-        item.selectedColorIndex === selectedColorIndex
+    dispatch(
+      addToCart({
+        ...product,
+        quantity: 1,
+        selectedColorIndex,
+        selectedSize,
+        selectedImage,
+      })
     );
 
-    let updatedCart;
-    if (existing) {
-      updatedCart = cart.map((item) =>
-        item.id === product.id &&
-        item.selectedSize === selectedSize &&
-        item.selectedColorIndex === selectedColorIndex
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      );
-    } else {
-      updatedCart = [...cart, cartItem];
-    }
-
-    setCart(updatedCart);
-    alert(`${product.name} added to cart!`);
+    setMessage(`${product.name} added to cart!`);
+    setTimeout(() => setMessage(""), 2000);
   };
 
   const filteredProducts = products.filter((p) => {
-    const categoryMatch = selectedCategory ? p.category === selectedCategory : true;
+    const categoryMatch = selectedCategory
+      ? p.category === selectedCategory
+      : true;
     const searchMatch =
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -80,8 +73,8 @@ const Home = () => {
     <>
       <Navbar onSearch={(term) => setSearchTerm(term)} />
 
-      <div className="p-0 dark:bg-gray-900 dark:text-white">
-        <div className="flex items-center justify-around p-4 gap-4 mb-6 bg-slate-200 dark:bg-gray-800">
+      <div className="p-0 dark:bg-gray-700 dark:text-white">
+        <div className="flex items-center justify-around p-5 gap-4 mb-6 bg-slate-200 dark:bg-gray-500">
           <h2 className="text-2xl font-bold mb-4">Fashion Categories</h2>
           {categories.map((cat) => {
             const Icon = cat.icon;
@@ -90,26 +83,32 @@ const Home = () => {
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.name)}
-                className={`flex items-center gap-1 p-2 rounded hover:bg-red-200 dark:hover:bg-red-700 ${
+                className={`flex items-center gap-1 p-2 rounded-lg hover:bg-red-200 dark:hover:bg-red-700 ${
                   isActive
                     ? "bg-red-500 text-white dark:bg-red-600"
                     : "bg-amber-100 dark:bg-gray-700 dark:text-gray-200"
                 }`}
               >
-                {Icon && <Icon />}
                 {cat.name}
+                {getCategoryIcon(cat.name)}
               </button>
             );
           })}
           <button
             onClick={() => setSelectedCategory(null)}
-            className="bg-red-200 p-2 rounded hover:bg-red-300 dark:bg-red-700 dark:text-white dark:hover:bg-red-600"
+            className="bg-red-200 p-2 rounded-md hover:bg-red-300 dark:bg-red-700 dark:text-white dark:hover:bg-red-600"
           >
             Show All
           </button>
         </div>
 
-        <h2 className="text-2xl font-bold mb-4">Products</h2>
+        <h2 className="text-2xl m-auto font-bold mb-4">
+          <h2 className="text-2xl flex items-center gap-2 pl-10 m-auto font-bold mb-4 p-4 bg-slate-100   dark:text-slate-800 dark:hover:bg-red-600">
+            Products
+            {getCategoryIcon(selectedCategory)} :{" "}
+            {selectedCategory ? selectedCategory : "All"}
+          </h2>
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {filteredProducts.map((product) => {
             const selectedColorIndex = selectedColors[product.id] || 0;
@@ -121,35 +120,57 @@ const Home = () => {
             return (
               <div
                 key={product.id}
-                className="border p-4 rounded shadow hover:shadow-lg bg-white dark:bg-gray-800"
+                className="border mx-10 my-10 p-4 rounded shadow hover:shadow-lg bg-white dark:bg-gray-800"
               >
+                <p className="font-semibold"> Id No: {product.id}</p>
                 <div className="flex justify-between mb-2">
                   <p>
                     <strong>Brand:</strong> {product.brand}
                   </p>
-                  <p>
-                    <strong>Rating:</strong> {product.ratings.average} ⭐ (
-                    {product.ratings.count} reviews)
-                  </p>
-                </div>
-
+                  <div className="flex items-center   mb-2">
+                    <strong> Rating : </strong>
+                    {product.ratings.average}
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <span
+                        key={i}
+                        className={`text-lg  ${
+                          product.ratings.average >= i
+                            ? "text-yellow-400"
+                            : product.ratings.average >= i - 0.5
+                            ? "text-yellow-200"
+                            : "text-gray-300"
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span className="ml-2 text-gray-600 dark:text-gray-300 text-sm">
+                      ({product.ratings.count} reviews)
+                    </span>
+                  </div>
+                </div>{" "}
                 <img
                   src={selectedImage}
                   alt={product.name}
                   className="w-full h-64 object-cover mb-2 rounded"
                 />
-
-                <h3 className="font-semibold text-lg">{product.name}</h3>
-                <p className="text-gray-700 dark:text-gray-300">
+                <h3 className="font-semibold text-lg mt-5">{product.name}</h3>
+                <div className="flex justify-between items-center text-gray-700 dark:text-gray-300 mb-2">
                   <span className="line-through text-red-500">
-                    {product.currency} {product.price}
-                  </span>{" "}
-                  <span className="font-bold">
-                    {product.currency} {product.discountPrice}
+                    MRP :{product.currency} {product.price}
                   </span>
-                </p>
-                <p className="mb-2">{product.description}</p>
-
+                  <span className="font-bold">
+                    Discount: {product.currency} {product.discountPrice}
+                  </span>
+                </div>
+                <div className="flex justify-end">
+                  <span className="font-bold text-lg text-gray-900 dark:bg-white p-1.5 rounded-lg">
+                    <span className="text-red-500">B</span>ig{" "}
+                    <span className="text-red-500">C</span>art Price:{" "}
+                    {product.BigCart}
+                  </span>
+                </div>
+                <p className="mb-2">Description: {product.description}</p>
                 {product.colors && (
                   <div className="mb-2">
                     <strong>Colors:</strong>{" "}
@@ -168,7 +189,6 @@ const Home = () => {
                     ))}
                   </div>
                 )}
-
                 {product.sizes && (
                   <div className="mb-2">
                     <strong>Sizes:</strong>{" "}
@@ -187,18 +207,15 @@ const Home = () => {
                     ))}
                   </div>
                 )}
-
                 <p>
                   <strong>Stock:</strong> {product.stock}
                 </p>
-
                 <Link
                   to={`/product/${product.id}`}
                   className="text-blue-500 hover:underline mt-2 block dark:text-blue-400"
                 >
                   View Details
                 </Link>
-
                 <button
                   onClick={() => handleAddToCart(product)}
                   className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600 transition mt-2"
@@ -209,6 +226,11 @@ const Home = () => {
             );
           })}
         </div>
+        {message && (
+          <div className="fixed top-11 right-20 transform mt-8 -translate-x-1 z-50 p-4 bg-orange-100 border border-green-400 rounded-lg text-purple-800 shadow-lg transition-all">
+            {message}
+          </div>
+        )}
       </div>
     </>
   );

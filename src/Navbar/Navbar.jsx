@@ -1,14 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineHome, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FiShoppingCart } from "react-icons/fi";
 import DarkModeToggle from "../components/DarkModeToggle";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ onSearch }) => {
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
+  const cartItems = useSelector((state) => state.cart.items);
+  const cartCount = cartItems.reduce(
+    (acc, item) => acc + (item.quantity || 1),
+    0
+  );
 
   const handleSearchClick = () => {
     setClicked(true);
@@ -16,28 +21,9 @@ const Navbar = ({ onSearch }) => {
     setTimeout(() => setClicked(false), 100);
   };
 
-  
-  useEffect(() => {
-    const updateCartCount = () => {
-      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const totalItems = storedCart.reduce((acc, item) => acc + item.quantity, 0);
-      setCartCount(totalItems);
-    };
-
-    updateCartCount();
-
-    
-    window.addEventListener("storage", updateCartCount);
-
-    return () => {
-      window.removeEventListener("storage", updateCartCount);
-    };
-  }, []);
-
   return (
-    <nav className="p-4 shadow-md sticky top-0 z-50 bg-gray-100 dark:bg-gray-700 transition-colors duration-300">
+    <nav className="p-4 shadow-md sticky top-0 z-50 bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-3">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZj6WNrw6o1eh0Z84fAxIO0M-RMMoN1W3aeQ&s"
@@ -50,14 +36,13 @@ const Navbar = ({ onSearch }) => {
           </span>
         </Link>
 
-        
         <div className="hidden md:flex items-center gap-6 ml-auto">
           <input
             type="text"
             placeholder="Search products or categories..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md focus:outline-none focus:border-red-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="p-2 border  border-gray-300 rounded-md focus:outline-none focus:border-red-500 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
           />
           <button
             onClick={handleSearchClick}
@@ -70,47 +55,50 @@ const Navbar = ({ onSearch }) => {
             Search
           </button>
 
-          
           <div className="flex items-center gap-6">
             <Link
               to="/"
-              className="flex items-center gap-1 hover:underline hover:bg-green-400 px-3 py-2 hover:rounded-md hover:text-white transition-all dark:text-white"
+              className="flex items-center gap-1 bg-green-300 text-black dark:text-white rounded-md hover:underline hover:bg-green-500 px-3 py-2 hover:rounded-md hover:text-white transition-all"
             >
               <AiOutlineHome /> Home
             </Link>
+
             <Link
               to="/cart"
-              className="relative flex items-center gap-1 hover:underline hover:bg-orange-400 px-3 py-2 hover:rounded-md hover:text-white transition-all dark:text-white"
+              className="relative flex items-center gap-1 bg-orange-300 text-black dark:text-white rounded-md hover:underline hover:bg-orange-500 px-3 py-2 hover:rounded-md hover:text-white transition-all"
             >
               <FiShoppingCart /> Cart
-          
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                   {cartCount}
                 </span>
               )}
             </Link>
+
             <Link
               to="/checkout"
-              className="flex items-center gap-1 hover:underline hover:bg-blue-400 px-3 py-2 hover:rounded-md hover:text-white transition-all dark:text-white"
+              className="flex items-center gap-1 bg-blue-400 text-black dark:text-white rounded-md hover:underline hover:bg-blue-700 px-3 py-2 hover:rounded-md hover:text-white transition-all"
             >
               <FiShoppingCart /> Checkout
             </Link>
+
 
             <DarkModeToggle />
           </div>
         </div>
 
-        
         <div className="md:hidden flex items-center gap-2">
           <DarkModeToggle />
           <button onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
+            {menuOpen ? (
+              <AiOutlineClose size={24} />
+            ) : (
+              <AiOutlineMenu size={24} />
+            )}
           </button>
         </div>
       </div>
 
-      
       {menuOpen && (
         <div className="md:hidden mt-2 flex flex-col gap-2 bg-gray-100 dark:bg-gray-900 p-2 rounded transition-colors duration-300">
           <Link

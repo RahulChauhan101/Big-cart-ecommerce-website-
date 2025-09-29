@@ -16,7 +16,7 @@ const DarkModeToggle = () => {
   return (
     <button
       onClick={() => setDark(!dark)}
-      className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white flex items-center justify-center"
+      className=" py-3 px-4   rounded bg-gray-700 dark:bg-gray-400 text-gray-400 dark:text-white flex items-center justify-center"
       title={dark ? "Switch to Light Mode" : "Switch to Dark Mode"}
     >
       {dark ? <FaSun size={18} /> : <FaMoon size={18} />}
