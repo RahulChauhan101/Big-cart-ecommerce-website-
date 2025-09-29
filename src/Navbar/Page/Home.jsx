@@ -12,19 +12,16 @@ const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cart, setCart] = useState([]);
 
-
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(storedCart);
   }, []);
-
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("storage"));
   }, [cart]);
 
-  
   const handleCategoryClick = (name) => setSelectedCategory(name);
   const handleColorClick = (productId, index) =>
     setSelectedColors({ ...selectedColors, [productId]: index });
@@ -83,24 +80,30 @@ const Home = () => {
     <>
       <Navbar onSearch={(term) => setSearchTerm(term)} />
 
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-4">Fashion Categories</h2>
-        <div className="flex gap-4 mb-6">
+      <div className="p-0 dark:bg-gray-900 dark:text-white">
+        <div className="flex items-center justify-around p-4 gap-4 mb-6 bg-slate-200 dark:bg-gray-800">
+          <h2 className="text-2xl font-bold mb-4">Fashion Categories</h2>
           {categories.map((cat) => {
             const Icon = cat.icon;
+            const isActive = selectedCategory === cat.name;
             return (
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.name)}
-                className="bg-amber-100 p-2 rounded hover:bg-amber-200 flex items-center gap-1"
+                className={`flex items-center gap-1 p-2 rounded hover:bg-red-200 dark:hover:bg-red-700 ${
+                  isActive
+                    ? "bg-red-500 text-white dark:bg-red-600"
+                    : "bg-amber-100 dark:bg-gray-700 dark:text-gray-200"
+                }`}
               >
-                {Icon && <Icon />} {cat.name}
+                {Icon && <Icon />}
+                {cat.name}
               </button>
             );
           })}
           <button
             onClick={() => setSelectedCategory(null)}
-            className="bg-red-200 p-2 rounded hover:bg-red-300"
+            className="bg-red-200 p-2 rounded hover:bg-red-300 dark:bg-red-700 dark:text-white dark:hover:bg-red-600"
           >
             Show All
           </button>
@@ -118,7 +121,7 @@ const Home = () => {
             return (
               <div
                 key={product.id}
-                className="border p-4 rounded shadow hover:shadow-lg"
+                className="border p-4 rounded shadow hover:shadow-lg bg-white dark:bg-gray-800"
               >
                 <div className="flex justify-between mb-2">
                   <p>
@@ -137,7 +140,7 @@ const Home = () => {
                 />
 
                 <h3 className="font-semibold text-lg">{product.name}</h3>
-                <p className="text-gray-700">
+                <p className="text-gray-700 dark:text-gray-300">
                   <span className="line-through text-red-500">
                     {product.currency} {product.price}
                   </span>{" "}
@@ -157,7 +160,7 @@ const Home = () => {
                         className={`inline-block mr-2 px-2 py-1 border rounded cursor-pointer ${
                           selectedColors[product.id] === idx
                             ? "bg-blue-500 text-white"
-                            : "bg-gray-100 hover:bg-gray-200"
+                            : "bg-gray-100 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200"
                         }`}
                       >
                         {color}
@@ -176,7 +179,7 @@ const Home = () => {
                         className={`inline-block mr-2 px-2 py-1 border rounded cursor-pointer ${
                           selectedSizes[product.id] === size
                             ? "bg-green-500 text-white"
-                            : "bg-gray-100 hover:bg-gray-200"
+                            : "bg-gray-100 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200"
                         }`}
                       >
                         {size}
@@ -191,7 +194,7 @@ const Home = () => {
 
                 <Link
                   to={`/product/${product.id}`}
-                  className="text-blue-500 hover:underline mt-2 block"
+                  className="text-blue-500 hover:underline mt-2 block dark:text-blue-400"
                 >
                   View Details
                 </Link>
