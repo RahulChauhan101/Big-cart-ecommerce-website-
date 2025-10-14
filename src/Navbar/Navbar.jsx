@@ -82,6 +82,16 @@ const Navbar = ({ onSearch }) => {
               <FiShoppingCart /> Checkout
             </Link>
 
+                          <Link
+            to="/productList"
+            className="flex items-center gap-1 px-3 py-2 hover:underline hover:bg-blue-400 hover:rounded-md hover:text-white transition-all dark:text-white"
+            onClick={() => setMenuOpen(false)}
+          >
+            <FiShoppingCart /> productList
+          </Link>
+
+            
+
 
             <DarkModeToggle />
           </div>
@@ -126,6 +136,13 @@ const Navbar = ({ onSearch }) => {
             onClick={() => setMenuOpen(false)}
           >
             <FiShoppingCart /> Checkout
+          </Link>
+              <Link
+            to="/productList"
+            className="flex items-center gap-1 px-3 py-2 hover:underline hover:bg-blue-400 hover:rounded-md hover:text-white transition-all dark:text-white"
+            onClick={() => setMenuOpen(false)}
+          >
+            <FiShoppingCart /> productList
           </Link>
         </div>
       )}

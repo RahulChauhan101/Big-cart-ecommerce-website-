@@ -54,12 +54,13 @@ export  const data = {
         BigCart: 1499,
         currency: "₹",
         sizes: ["S", "M", "L"],
-        colors: ["Blue Denim", "Black Denim"],
+        colors: ["Blue Denim", "Black"],
         stock: 45,
-        images: [
-          "https://dummyimage.com/400x400/87ceeb/000000&text=Denim+Jacket",
-          "https://dummyimage.com/400x400/000000/ffffff&text=Black+Jacket",
-        ],
+       images: [
+    "https://dummyimage.com/400x400/87ceeb/000000&text=Blue+Denim+Jacket", // Blue Denim
+    "https://dummyimage.com/400x400/000000/ffffff&text=Black+Jacket"       // Black
+  ],
+
         description: "Trendy denim jacket with slim fit design.",
         ratings: { average: 4.2, count: 95 },
       },
@@ -97,6 +98,8 @@ export  const data = {
         colors: ["Dark Blue", "Black"],
         stock: 80,
         images: ["https://dummyimage.com/400x400/1e3d59/ffffff&text=Slim+Fit+Jeans"],
+        images: ["https://dummyimage.com/400x400/1e3d59/ffffff&text=Slim+Fit+Jeans"],
+        images: ["https://dummyimage.com/400x400/1e3d59/ffffff&text=Slim+Fit+Jeans"],
         description: "Comfortable slim-fit denim jeans for men.",
         ratings: { average: 4.3, count: 150 },
       },
@@ -111,9 +114,10 @@ export  const data = {
   BigCart: 1999,
   currency: "₹",
   sizes: ["XS", "S", "M", "L"],
-  colors: ["Yellow Floral", "Pink Floral"],
+  colors: ["Yellow", "Pink"],
   stock: 35,
-  images: ["https://dummyimage.com/400x400/ffb6c1/000000&text=Floral+Dress"],
+  images: ["https://dummyimage.com/400x400/ffff00/000000&text=Floral+Dress"],
+  images: ["https://dummyimage.com/400x400/ffff00/000000&text=Floral+Dress"],
   description: "Lightweight floral dress, perfect for summer outings.",
   ratings: { average: 4.6, count: 200 }
 },
@@ -148,6 +152,8 @@ export  const data = {
   colors: ["Red", "Yellow", "Blue"],
   stock: 100,
   images: ["https://dummyimage.com/400x400/ffff00/000000&text=Cartoon+Tee"],
+  images: ["https://dummyimage.com/400x400/ffff00/000000&text=Cartoon+Tee"],
+  images: ["https://dummyimage.com/400x400/ffff00/000000&text=Cartoon+Tee"],
   description: "Bright cartoon print T-shirt for kids.",
   ratings: { average: 4.4, count: 75 }
 },
@@ -165,6 +171,7 @@ export  const data = {
   colors: ["Blue", "Black"],
   stock: 65,
   images: ["https://dummyimage.com/400x400/00008b/ffffff&text=Skinny+Jeans"],
+  images: ["https://dummyimage.com/400x400/00008b/ffffff&text=Skinny+Jeans"],
   description: "Stretchable skinny-fit denim jeans for women.",
   ratings: { average: 4.1, count: 130 }
 },
@@ -179,8 +186,9 @@ export  const data = {
   BigCart: 999,
   currency: "₹",
   sizes: ["M", "L", "XL"],
-  colors: ["White", "Sky Blue"],
+  colors: ["White", "SkyBlue"],
   stock: 70,
+  images: ["https://dummyimage.com/400x400/87ceeb/000000&text=Formal+Shirt"],
   images: ["https://dummyimage.com/400x400/87ceeb/000000&text=Formal+Shirt"],
   description: "Cotton blend formal shirt ideal for office wear.",
   ratings: { average: 4.0, count: 50 }
@@ -254,7 +262,7 @@ export  const data = {
   BigCart: 999,
   currency: "₹",
   sizes: ["S", "M", "L", "XL"],
-  colors: ["White", "Navy Blue"],
+  colors: ["White", "Navy"],
   stock: 120,
   images: [
     "https://dummyimage.com/400x400/ffffff/000000&text=White+Uniform",

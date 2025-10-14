@@ -26,6 +26,7 @@ const Home = () => {
       case "Kids":
         return <FaChild className=" h-5 text-purple-500" />;
       default:
+        
         return <AiOutlineShopping className="text-green-600" />;
     }
   };
@@ -106,7 +107,7 @@ const Home = () => {
           <h2 className="text-2xl flex items-center gap-2 pl-10 m-auto font-bold mb-4 p-4 bg-slate-100   dark:text-slate-800 dark:hover:bg-red-600">
             Products
             {getCategoryIcon(selectedCategory)} :{" "}
-            {selectedCategory ? selectedCategory : "All"}
+            {selectedCategory ? selectedCategory : "Show All"}
           </h2>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -152,7 +153,7 @@ const Home = () => {
                 <img
                   src={selectedImage}
                   alt={product.name}
-                  className="w-full h-64 object-cover mb-2 rounded"
+                  className="border border-gray-500 w-full h-64 object-cover mb-2 rounded "
                 />
                 <h3 className="font-semibold text-lg mt-5">{product.name}</h3>
                 <div className="flex justify-between items-center text-gray-700 dark:text-gray-300 mb-2">
@@ -171,24 +172,25 @@ const Home = () => {
                   </span>
                 </div>
                 <p className="mb-2">Description: {product.description}</p>
-                {product.colors && (
-                  <div className="mb-2">
-                    <strong>Colors:</strong>{" "}
-                    {product.colors.map((color, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleColorClick(product.id, idx)}
-                        className={`inline-block mr-2 px-2 py-1 border rounded cursor-pointer ${
-                          selectedColors[product.id] === idx
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-100 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200"
-                        }`}
-                      >
-                        {color}
-                      </button>
-                    ))}
-                  </div>
-                )}
+ {product.colors && (
+  <div className="mb-2">
+    <strong>Colors:</strong>{" "}
+    {product.colors.map((color, idx) => (
+      <button
+        key={idx}
+        onClick={() => handleColorClick(product.id, idx)}
+        className={`inline-block mr-2 w-8 h-8 rounded-full border-2 cursor-pointer ${
+          selectedColors[product.id] === idx
+            ? "border-blue-500 scale-110"
+            : "border-gray-300"
+        }`}
+        style={{ backgroundColor: color }}
+        title={color} // shows name/hex on hover
+      ></button>
+    ))}
+  </div>
+)}
+
                 {product.sizes && (
                   <div className="mb-2">
                     <strong>Sizes:</strong>{" "}

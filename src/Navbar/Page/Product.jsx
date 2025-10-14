@@ -6,13 +6,15 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../reducer/cartReducer";
 
 const Product = () => {
-  const { id } = useParams(); 
-  const product = data.products.find(p => p.id == id);
+  const { id } = useParams();
+  const product = data.products.find((p) => p.id == id);
   const dispatch = useDispatch();
+    const [message, setMessage] = useState("");
 
-  
   const [selectedColors, setSelectedColors] = useState({});
   const [selectedSizes, setSelectedSizes] = useState({});
+
+  if (!product) return <p className="p-4">Product not found</p>;
 
   const handleColorClick = (id, idx) => {
     setSelectedColors({ ...selectedColors, [id]: idx });
@@ -22,34 +24,41 @@ const Product = () => {
     setSelectedSizes({ ...selectedSizes, [id]: size });
   };
 
-  const handleAddToCart = (product) => {
-    const selectedColorIndex = selectedColors[product.id] || 0;
-    const selectedSize = selectedSizes[product.id] || null;
-    const selectedImage =
-      product.images && product.images[selectedColorIndex]
-        ? product.images[selectedColorIndex]
-        : product.images[0];
+const handleAddToCart = () => {
+  const selectedColorIndex = selectedColors[product.id] || 0;
+  const selectedSize = selectedSizes[product.id] || null;
+  const selectedImage =
+    product.images && product.images[selectedColorIndex]
+      ? product.images[selectedColorIndex]
+      : product.images[0];
 
-    dispatch(
-      addToCart({
-        ...product,
-        quantity: 1,
-        selectedColorIndex,
-        selectedSize,
-        selectedImage,
-      })
-    );
-  };
+  dispatch(
+    addToCart({
+      ...product,
+      quantity: 1,
+      selectedColorIndex,
+      selectedSize,
+      selectedImage,
+    })
+  );
 
-  if (!product) return <p className="p-4">Product not found</p>;
+  setMessage(
+    `${product.name} (Color: ${
+      selectedColors[product.id] !== undefined
+        ? product.colors[selectedColors[product.id]]
+        : "default"
+    }, Size: ${selectedSizes[product.id] || "default"}) added to cart!`
+  );
+
+  setTimeout(() => setMessage(""), 2000);
+};
+
 
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 flex justify-center">
         <div className="max-w-5xl w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6">
-          
-          
           <div className="md:w-1/2">
             <img
               src={product.images[0]}
@@ -63,15 +72,11 @@ const Product = () => {
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                 {product.name}
               </h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                <strong>Id:</strong> {product.id} | <strong>Category:</strong>{" "}
-                {product.category} | <strong>Subcategory:</strong> {product.subcategory}
-              </p>
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-gray-600 dark:text-gray-300 mt-1">
+                <strong>Category:</strong> {product.category} |{" "}
                 <strong>Brand:</strong> {product.brand}
               </p>
 
-              
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <span className="line-through text-red-500 dark:text-gray-500">
                   MRP: {product.price}₹
@@ -84,7 +89,6 @@ const Product = () => {
                 </span>
               </div>
 
-            
               {product.colors && (
                 <div className="mt-2">
                   <strong>Colors:</strong>{" "}
@@ -94,9 +98,11 @@ const Product = () => {
                       onClick={() => handleColorClick(product.id, idx)}
                       className={`inline-block mr-2 mt-1 px-2 py-1 border rounded cursor-pointer ${
                         selectedColors[product.id] === idx
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-100 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200"
+                          ? "border-2 border-black"
+                          : "border-gray-300"
                       }`}
+                      style={{ backgroundColor: color }}
+                      title={color}
                     >
                       {color}
                     </button>
@@ -104,7 +110,6 @@ const Product = () => {
                 </div>
               )}
 
-          
               {product.sizes && (
                 <div className="mt-2">
                   <strong>Sizes:</strong>{" "}
@@ -124,42 +129,24 @@ const Product = () => {
                 </div>
               )}
 
-            
               <p className="text-gray-700 dark:text-gray-300 mt-2">
                 <strong>Description:</strong> {product.description}
               </p>
-
-              <div className="flex items-center gap-2 mt-2">
-                <strong className="text-gray-800 dark:text-gray-200">Rating:</strong>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <span
-                    key={i}
-                    className={`text-lg ${
-                      product.ratings.average >= i
-                        ? "text-yellow-400"
-                        : product.ratings.average >= i - 0.5
-                        ? "text-yellow-200"
-                        : "text-gray-300 dark:text-gray-500"
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
-                <span className="ml-2 text-gray-600 dark:text-gray-400 text-sm">
-                  ({product.ratings.count} reviews)
-                </span>
-              </div>
             </div>
 
-            
             <button
-              onClick={() => handleAddToCart(product)}
+              onClick={handleAddToCart}
               className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition mt-4 md:mt-0"
             >
               Add to Cart
             </button>
           </div>
         </div>
+                {message && (
+          <div className="fixed top-11 right-20 transform mt-8 -translate-x-1 z-50 p-4 bg-orange-100 border border-green-400 rounded-lg text-purple-800 shadow-lg transition-all">
+            {message}
+          </div>
+        )}
       </div>
     </>
   );
