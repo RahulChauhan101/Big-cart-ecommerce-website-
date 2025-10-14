@@ -1,7 +1,8 @@
+
+// home.jsx
 import React, { useState } from "react";
 import { AiOutlineShopping } from "react-icons/ai";
 import { FaMale, FaFemale, FaChild } from "react-icons/fa";
-
 import { Link } from "react-router-dom";
 import Navbar from "../../Navbar/Navbar";
 import { data } from "../../data/data";
