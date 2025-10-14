@@ -3,7 +3,7 @@ import { AiOutlineShopping } from "react-icons/ai";
 import { FaMale, FaFemale, FaChild } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
-import Navbar from "../Navbar";
+import Navbar from "../../Navbar/Navbar";
 import { data } from "../../data/data";
 import { addToCart } from "../../reducer/cartReducer";
 import { useDispatch } from "react-redux";

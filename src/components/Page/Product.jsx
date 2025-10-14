@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { data } from "../../data/data";
-import Navbar from "../Navbar";
+
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../reducer/cartReducer";
+import Navbar from "../../Navbar/Navbar";
 
 const Product = () => {
   const { id } = useParams();
@@ -56,7 +57,9 @@ const handleAddToCart = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
+      <Navbar/>
+
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 flex justify-center">
         <div className="max-w-5xl w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6">
           <div className="md:w-1/2">

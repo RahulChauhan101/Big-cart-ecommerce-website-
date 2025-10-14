@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Navbar";
+import Navbar from "../../Navbar/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import {
   removeFromCart,

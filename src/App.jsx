@@ -1,12 +1,15 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar/Navbar";
-import Home from "./Navbar/Page/Home";
-import Cart from "./Navbar/Page/Cart";
-import CheckoutPage from "./Navbar/Page/CheckoutPage";
-import Product from "./Navbar/Page/product";
+import Home from "./components/Page/Home"
+import Cart from "./components/Page/Cart";
+import CheckoutPage from "./components/Page/CheckoutPage";
+import Product from "./components/Page/product";
 import ProductList from "./components/ProductList";
 
+
+// Main Application Component
+    // Navbar with search functionality
 
 
 function App() {
