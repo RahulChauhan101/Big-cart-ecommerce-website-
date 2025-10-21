@@ -1,5 +1,8 @@
 
+// <<<<<<< HEAD
 // home.jsx
+// =======
+// >>>>>>> rahuldev1
 import React, { useState } from "react";
 import { AiOutlineShopping } from "react-icons/ai";
 import { FaMale, FaFemale, FaChild } from "react-icons/fa";
