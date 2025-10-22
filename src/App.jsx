@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
-import Navbar from "./Navbar/Navbar";
+import Navbar from "../src/Navbar/Navbar";
 import Home from "./components/Page/Home"
 import Cart from "./components/Page/Cart";
 import CheckoutPage from "./components/Page/CheckoutPage";
-import Product from "./components/Page/product";
 import ProductList from "./components/ProductList";
+import Product from "./components/Page/product";
+import Auth from "./components/Page/Auth";
 
 
 // Main Application Component
