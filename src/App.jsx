@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { supabase } from "./supabaseClient";
 
 import Navbar from "./Navbar/Navbar";
-import Home from "./components/Page/Home";
-import Cart from "./components/Page/Cart";
-import CheckoutPage from "./components/Page/CheckoutPage";
+import Home from "./components/page/Home.jsx";
+import Cart from "./components/page/Cart.jsx";
+import CheckoutPage from "./components/page/CheckoutPage.jsx";
 import ProductList from "./components/ProductList";
-import Product from "./components/Page/product";
+import Product from "./components/page/Product.jsx";
 import Auth from "./Auth.jsx";
 import ProfileUpdate from "./ProfileUpdate.jsx";
 
