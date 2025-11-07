@@ -2,24 +2,21 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 
-import Navbar from "../src/Navbar/Navbar";
-import Home from "./components/Page/Home"
+import Navbar from "./Navbar/Navbar";
+import Home from "./components/Page/Home";
 import Cart from "./components/Page/Cart";
 import CheckoutPage from "./components/Page/CheckoutPage";
 import ProductList from "./components/ProductList";
 import Product from "./components/Page/product";
-import Auth from "./components/Page/Auth";
-
-
-// Main Application Component
-    // Navbar with search functionality
-
+import Auth from "./Auth.jsx";
+import ProfileUpdate from "./ProfileUpdate.jsx";
 
 function App() {
   const [session, setSession] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    // Get current session on load
+    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
@@ -32,20 +29,30 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // If not logged in, show Auth component
-  if (!session) return <Auth />;
-
   return (
     <Router>
-      <Navbar />
+      <Navbar onSearch={(term) => setSearchTerm(term)} session={session} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/productList" element={<ProductList />} />
-        {/* Redirect any unknown route to home */}
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* Auth Route: redirect to home if already logged in */}
+        <Route
+          path="/auth"
+          element={session ? <Navigate to="/" /> : <Auth />}
+        />
+
+        {/* Main Routes */}
+        {session && (
+          <>
+            <Route path="/" element={<Home searchTerm={searchTerm} />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="/productList" element={<ProductList />} />
+            <Route path="/profile" element={<ProfileUpdate user={session.user} />} />
+          </>
+        )}
+
+        {/* Redirect unknown routes */}
+        <Route path="*" element={<Navigate to={session ? "/" : "/auth"} />} />
       </Routes>
     </Router>
   );
