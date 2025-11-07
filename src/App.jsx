@@ -6,7 +6,7 @@ import Navbar from "./Navbar/Navbar";
 import Home from "./components/page/Home.jsx";
 import Cart from "./components/page/Cart.jsx";
 import CheckoutPage from "./components/page/CheckoutPage.jsx";
-import ProductList from "./components/ProductList";
+import ProductList from "./components/ProductList.jsx";
 import Product from "./components/page/Product.jsx";
 import Auth from "./Auth.jsx";
 import ProfileUpdate from "./ProfileUpdate.jsx";
