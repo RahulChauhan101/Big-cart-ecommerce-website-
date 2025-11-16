@@ -7,32 +7,28 @@ const ProfileUpdate = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("");
 
-  // Fetch current profile info
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user) return;
-      try {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("user_id", user.id)
-          .single();
 
-        if (profile) {
-          setFullName(profile.full_name || "");
-          setAvatarUrl(profile.avatar_url || "");
-        }
-      } catch (err) {
-        console.error("Profile fetch error:", err);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (profile) {
+        setFullName(profile.full_name || "");
+        setAvatarUrl(profile.avatar_url || "");
       }
     };
+
     fetchProfile();
   }, [user]);
 
-  // Upload avatar
   const uploadAvatar = async (file, userId) => {
     const ext = file.name.split(".").pop();
-    const fileName = `${userId}.${ext}`;
+    const fileName = `${userId}-${Date.now()}.${ext}`;
     const filePath = `avatars/${fileName}`;
 
     const { error } = await supabase.storage
@@ -41,14 +37,10 @@ const ProfileUpdate = ({ user }) => {
 
     if (error) throw error;
 
-    const { data: publicData } = supabase.storage
-      .from("avatars")
-      .getPublicUrl(filePath);
-
-    return publicData.publicUrl;
+    const { data } = supabase.storage.from("avatars").getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
-  // Update profile
   const handleUpdate = async () => {
     if (!user) return;
     setLoading(true);
@@ -62,54 +54,55 @@ const ProfileUpdate = ({ user }) => {
 
       const { error } = await supabase
         .from("profiles")
-        .upsert([
-          {
-            user_id: user.id,
-            full_name: fullName,
-            avatar_url: newAvatarUrl,
-          },
-        ]);
+        .update({
+          full_name: fullName,
+          avatar_url: newAvatarUrl,
+        })
+        .eq("user_id", user.id);
 
       if (error) throw error;
 
       setAvatarUrl(newAvatarUrl);
-      alert("✅ Profile updated successfully!");
       setAvatarFile(null);
+
+      alert("✅ Profile updated successfully!");
     } catch (err) {
       console.error("Profile update error:", err);
-      alert("❌ Failed to update profile");
+      alert("❌ Failed to update profile: " + err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-80">
-        <h2 className="text-2xl font-semibold text-center mb-6">
+    <div className="flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-8">
+      <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md w-80">
+        <h2 className="text-2xl font-semibold text-center mb-6 dark:text-white">
           Update Profile
         </h2>
 
-        {avatarUrl && (
+        <div className="flex justify-center mb-4">
           <img
-            src={avatarUrl}
+            src={avatarUrl || "https://via.placeholder.com/120"}
             alt="Avatar"
-            className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+            className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
           />
-        )}
+        </div>
 
         <label className="block mb-4">
-          <span className="text-sm font-medium text-gray-700">Full Name</span>
+          <span className="text-sm text-gray-700 dark:text-gray-300">
+            Full Name
+          </span>
           <input
             type="text"
-            value= {fullName}
+            value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="w-full p-2 mt-2 border rounded"
+            className="w-full p-2 mt-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           />
         </label>
 
         <label className="block mb-4">
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm text-gray-700 dark:text-gray-300">
             Upload New Avatar
           </span>
           <input
@@ -123,7 +116,7 @@ const ProfileUpdate = ({ user }) => {
         <button
           onClick={handleUpdate}
           disabled={loading}
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:opacity-50"
         >
           {loading ? "Updating..." : "Update Profile"}
         </button>
