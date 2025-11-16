@@ -10,6 +10,7 @@ import ProductList from "./components/ProductList.jsx";
 import Product from "./components/Page/Product.jsx";
 import Auth from "./Auth.jsx";
 import ProfileUpdate from "./ProfileUpdate.jsx";
+import Products from "./components/Products.jsx";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -48,6 +49,7 @@ function App() {
             <Route path="/product/:id" element={<Product />} />
             <Route path="/productList" element={<ProductList />} />
             <Route path="/profile" element={<ProfileUpdate user={session.user} />} />
+            <Route path="/products" element={<Products />} />
           </>
         )}
 

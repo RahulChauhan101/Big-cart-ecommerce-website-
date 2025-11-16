@@ -7,6 +7,7 @@ import DarkModeToggle from "../components/DarkModeToggle";
 import { useSelector } from "react-redux";
 import { supabase } from "../supabaseClient";
 
+
 const Navbar = ({ onSearch, session }) => {
   const navigate = useNavigate();
   const [input, setInput] = useState("");
@@ -101,11 +102,11 @@ useEffect(() => {
 
   const UserInfo = () =>
     user ? (
-      <div className="flex items-center gap-3 px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded-md">
+      <div className="flex items-center gap-3 px-5 py-2 bg-gray-200 dark:bg-gray-700 rounded-md">
         <img
           src={avatarUrl || "https://via.placeholder.com/32"}
           alt="Profile"
-          className="w-8 h-8 rounded-full object-cover"
+          className="w-[50px] h-[50px] rounded-full object-cover border-2 border-red-500 p-1"
         />
         <div className="flex flex-col">
           <h2 className="text-sm font-semibold">{fullName || "User"}</h2>
@@ -164,6 +165,9 @@ useEffect(() => {
             </Link>
 
             <Link to="/productList" className="flex items-center gap-1 px-3 py-2 hover:underline hover:bg-blue-400 rounded-md transition-all">
+              <FiShoppingCart /> ProductList
+            </Link>
+            <Link to="/products" className="flex items-center gap-1 px-3 py-2 hover:underline hover:bg-blue-400 rounded-md transition-all">
               <FiShoppingCart /> Products
             </Link>
 
@@ -209,8 +213,11 @@ useEffect(() => {
           </Link>
 
           <Link to="/productList" onClick={() => setMenuOpen(false)} className="flex items-center gap-1 px-3 py-2 hover:underline hover:bg-blue-400 rounded-md">
-            <FiShoppingCart /> Products
+            <FiShoppingCart /> Product List
           </Link>
+                 <Link to="/products" className="flex items-center gap-1 px-3 py-2 hover:underline hover:bg-blue-400 rounded-md transition-all">
+              <FiShoppingCart /> Products
+            </Link>
 
           <UserInfo />
 

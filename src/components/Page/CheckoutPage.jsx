@@ -60,7 +60,7 @@ const CheckoutPage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="p-6 max-w-3xl mx-auto mt-6 bg-slate-400 dark:bg-gray-800 text-black dark:text-white min-h-screen rounded-lg shadow-lg">
         <div className="flex items-center justify-center pb-6">
           <img

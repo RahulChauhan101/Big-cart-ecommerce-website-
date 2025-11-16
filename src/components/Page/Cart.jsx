@@ -51,7 +51,9 @@ const Cart = () => {
 
   return (
     <>
-      <Navbar onSearch={() => {}} />
+      
+      {/* <Navbar onSearch={() => {}} /> */}
+      
       <div className="p-4 min-h-screen bg-gray-100 dark:bg-gray-400 dark:text-white">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold mb-4 dark:text-black">Cart</h2>

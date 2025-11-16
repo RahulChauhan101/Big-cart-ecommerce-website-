@@ -102,7 +102,7 @@ const ProfileUpdate = ({ user }) => {
           <span className="text-sm font-medium text-gray-700">Full Name</span>
           <input
             type="text"
-            value={fullName}
+            value= {fullName}
             onChange={(e) => setFullName(e.target.value)}
             className="w-full p-2 mt-2 border rounded"
           />
