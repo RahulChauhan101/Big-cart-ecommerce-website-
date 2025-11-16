@@ -197,7 +197,7 @@ const Navbar = ({ onSearch }) => {
           <Link
             to="/profile"
             onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-4 p-4 rounded-xl bg-gray-200 dark:bg-gray-700 cursor-pointer hover:bg-#b91a1a-300 dark:hover:bg-gray-600 transition mb-4"
+            className="flex items-center gap-4 p-4 rounded-xl bg-gray-200 dark:bg-gray-700 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition mb-4"
           >
             <img
               src={avatarUrl || "https://via.placeholder.com/80"}
